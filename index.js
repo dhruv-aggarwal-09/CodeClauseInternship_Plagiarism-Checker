@@ -1,34 +1,44 @@
-// script.js
-
 document.getElementById('checkButton').addEventListener('click', checkPlagiarism);
 
 function checkPlagiarism() {
     const textToCheck = document.getElementById('content').value;
-    const referenceText = "This is a sample reference text to check for plagiarism.";
 
-    // Function to calculate Jaccard Similarity
-    function jaccardSimilarity(text1, text2) {
-        const set1 = new Set(text1.split(' '));
-        const set2 = new Set(text2.split(' '));
+    // Define the API request options
+    const apiOptions = {
+        method: 'POST',
+        url: 'https://plagiarism-checker-and-auto-citation-generator-multi-lingual.p.rapidapi.com/plagiarism',
+        headers: {
+            'content-type': 'application/json',
+            'X-RapidAPI-Key': '264d06ac7emsh7c71bc369c3faf1p1406b4jsn7a7b79086b73', // Replace with your RapidAPI key
+            'X-RapidAPI-Host': 'plagiarism-checker-and-auto-citation-generator-multi-lingual.p.rapidapi.com'
+        },
+        data: {
+            text: textToCheck,
+            language: 'en',
+            includeCitations: false,
+            scrapeSources: false
+        }
+    };
 
-        const intersection = new Set([...set1].filter(x => set2.has(x)));
-        const union = new Set([...set1, ...set2]);
+    // Make the API request using Axios
+    axios.request(apiOptions)
+        .then(response => {
+            // Handle the API response here
+            const plagiarismResult = document.getElementById('plagiarismResult');
+            const resultContainer = document.getElementById('result');
+            const apiResult = response.data; // The response from the plagiarism checker API
 
-        return (intersection.size / union.size) * 100;
-    }
+            if (apiResult.someCondition) {
+                plagiarismResult.textContent = `Plagiarism detected! Similarity: ${apiResult.similarity.toFixed(2)}%`;
+            } else {
+                plagiarismResult.textContent = `No plagiarism detected. Similarity: ${apiResult.similarity.toFixed(2)}%`;
+            }
 
-    const similarityPercentage = jaccardSimilarity(textToCheck, referenceText);
-
-    const plagiarismResult = document.getElementById('plagiarismResult');
-    const resultContainer = document.getElementById('result');
-
-    if (similarityPercentage >= 40) {
-        plagiarismResult.textContent = `Plagiarism detected! Similarity: ${similarityPercentage.toFixed(2)}%`;
-    } else {
-        plagiarismResult.textContent = `No plagiarism detected. Similarity: ${similarityPercentage.toFixed(2)}%`;
-    }
-
-    resultContainer.classList.remove('hidden');
+            resultContainer.classList.remove('hidden');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
 
 function hideResult() {
@@ -38,4 +48,3 @@ function hideResult() {
 
 // Hide the result on text input change
 document.getElementById('content').addEventListener('input', hideResult);
-
