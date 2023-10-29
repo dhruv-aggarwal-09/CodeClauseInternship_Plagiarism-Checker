@@ -9,27 +9,35 @@
 </head>
 
 <body>
+    <div id="loaderDiv" class="hidden">
+        <span class="loader"></span>
+        <label for="">Checking ...</label>
+    </div>
     <div class="container">
         <h1>Plagiarism Checker</h1>
-        <form id="plagiarismForm" action="/plagiarism-check" method="post" enctype="multipart/form-data">
-            <!-- <div class="form-group">
-                <label for="file">Upload a File:</label>
-                <input type="file" name="file" id="file">
-            </div> -->
+        <div id="plagiarismForm">
             <div class="form-group">
-                <label for="content">Or Paste Your Text Here:</label>
-                <textarea name="content" id="content" placeholder="Enter your text here..."></textarea>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 1rem;">
+                    <label for="content">Paste Your Text Here <b>Or</b></label>
+                    <input type="file" hidden name="file" id="fileInput" accept=".txt">
+                    <svg onclick="openReadFile()" style="cursor: pointer;transform: translateY(-3px) " xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
+                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                        <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                    </svg>
+                </div>
+                <textarea name="content" rows="20" id="content" placeholder="Enter your text here..."></textarea>
             </div>
             <div class="form-group">
-                <button id="checkButton" type="submit">Check for Plagiarism</button>
+                <button id="checkButton" onclick="checkPlagiarism()">Check for Plagiarism</button>
             </div>
-        </form>
-        <div id="result" class="hidden">
+        </div>
+        <div id="result">
             <h2>Results</h2>
-            <p id="plagiarismResult">No plagiarism detected.</p>
+            <p id="plagiarismResult">--</p>
         </div>
     </div>
 </body>
+<script src="jquery.js"></script>
 <script src="index.js"></script>
 
 </html>
