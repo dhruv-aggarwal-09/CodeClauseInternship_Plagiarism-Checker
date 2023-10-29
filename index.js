@@ -1,50 +1,55 @@
+// Import Axios library
+const axios = require('axios');
+
+// Add an event listener to trigger plagiarism check
 document.getElementById('checkButton').addEventListener('click', checkPlagiarism);
 
-function checkPlagiarism() {
+// Function to check plagiarism with the API
+async function checkPlagiarism() {
+    // Get the text to check from the textarea
     const textToCheck = document.getElementById('content').value;
 
     // Define the API request options
     const apiOptions = {
         method: 'POST',
-        url: 'https://plagiarism-checker-and-auto-citation-generator-multi-lingual.p.rapidapi.com/plagiarism',
+        url: '',
         headers: {
-            'content-type': 'application/json',
-            'X-RapidAPI-Key': '264d06ac7emsh7c71bc369c3faf1p1406b4jsn7a7b79086b73', // Replace with your RapidAPI key
-            'X-RapidAPI-Host': 'plagiarism-checker-and-auto-citation-generator-multi-lingual.p.rapidapi.com'
+            'content-type': '',
+            'X-RapidAPI-Key': '', // Replace with your RapidAPI key
+            'X-RapidAPI-Host': '',
         },
         data: {
             text: textToCheck,
-            language: 'en',
-            includeCitations: false,
-            scrapeSources: false
-        }
+        },
     };
 
     // Make the API request using Axios
-    axios.request(apiOptions)
-        .then(response => {
-            // Handle the API response here
-            const plagiarismResult = document.getElementById('plagiarismResult');
-            const resultContainer = document.getElementById('result');
-            const apiResult = response.data; // The response from the plagiarism checker API
+    try {
+        const response = await axios.request(apiOptions);
 
-            if (apiResult.someCondition) {
-                plagiarismResult.textContent = `Plagiarism detected! Similarity: ${apiResult.similarity.toFixed(2)}%`;
-            } else {
-                plagiarismResult.textContent = `No plagiarism detected. Similarity: ${apiResult.similarity.toFixed(2)}%`;
-            }
+        // Handle the API response here
+        const plagiarismResult = document.getElementById('plagiarismResult');
+        const resultContainer = document.getElementById('result');
+        const apiResult = response.data;
+        console.log(response.data);
 
-            resultContainer.classList.remove('hidden');
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+        if (apiResult.someCondition) {
+            plagiarismResult.textContent = `Plagiarism detected! Similarity: ${apiResult.similarity.toFixed(2)}%`;
+        } else {
+            plagiarismResult.textContent = `No plagiarism detected. Similarity: ${apiResult.similarity.toFixed(2)}%`;
+        }
+
+        resultContainer.classList.remove('hidden');
+    } catch (error) {
+        console.error('Error:', error);
+    }
 }
 
+// Function to hide the result
 function hideResult() {
     const resultContainer = document.getElementById('result');
     resultContainer.classList.add('hidden');
 }
 
-// Hide the result on text input change
+// Add an event listener to hide the result on text input change
 document.getElementById('content').addEventListener('input', hideResult);
